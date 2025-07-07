@@ -1,0 +1,19 @@
+name: fetch-licma-images
+on: workflow_dispatch           # 每次手动点 ▶️ 触发。无需 push 代码
+jobs:
+  save:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull required images
+        run: |
+          docker pull bblfsh/bblfshd:latest-drivers
+          docker pull python:3.10-slim
+          docker save bblfsh/bblfshd:latest-drivers | gzip > bblfshd.tar.gz
+          docker save python:3.10-slim | gzip > python310.tar.gz
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: licma-images
+          path: |
+            bblfshd.tar.gz
+            python310.tar.gz
