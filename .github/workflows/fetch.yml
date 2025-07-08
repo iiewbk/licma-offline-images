@@ -1,19 +1,29 @@
 name: fetch-licma-images
-on: workflow_dispatch           # 每次手动点 ▶️ 触发。无需 push 代码
+on: workflow_dispatch      # 手动 ▶️ 触发
+
 jobs:
   save:
     runs-on: ubuntu-latest
+
+    # v4 及之后的 Artifact Action 需要明确写出权限
+    permissions:
+      contents: write
+
     steps:
+      # 1️⃣ 拉镜像并打包
       - name: Pull required images
         run: |
-          docker pull bblfsh/bblfshd:latest-drivers
-          docker pull python:3.10-slim
-          docker save bblfsh/bblfshd:latest-drivers | gzip > bblfshd.tar.gz
-          docker save python:3.10-slim | gzip > python310.tar.gz
+          sudo docker pull bblfsh/bblfshd:latest-drivers
+          sudo docker pull python:3.10-slim
+          sudo docker save bblfsh/bblfshd:latest-drivers | gzip > bblfshd.tar.gz
+          sudo docker save python:3.10-slim | gzip > python310.tar.gz
+
+      # 2️⃣ 上传成 Artifact（**改 v4**）
       - name: Upload as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: licma-images
           path: |
             bblfshd.tar.gz
             python310.tar.gz
+          retention-days: 30      # 可按需修改保存天数
