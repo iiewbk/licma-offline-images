@@ -13,7 +13,7 @@ jobs:
               --platform manylinux2014_x86_64 --implementation cp \
               --python-version 310 --abi cp310 -r requirements.txt
           tar -czf wheels-linux310.tar.gz wheels
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: linux-wheels
           path: wheels-linux310.tar.gz
