@@ -1,5 +1,5 @@
-name: linux38-wheels
-on: workflow_dispatch
+name: linux310-wheels
+on: workflow_dispatch          # 手动触发
 
 jobs:
   wheels:
@@ -7,15 +7,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Collect wheels inside python:3.8 container
+      # 1) 用官方 python:3.10 容器编译所有 wheel
+      - name: Build wheels inside python:3.10
         run: |
-          docker run --rm -v "$PWD:/work" -w /work \
-            python:3.8-slim bash -c "
-              pip install -U pip &&
-              pip download -d wheels --only-binary=:all: -r requirements.txt"
-          tar -czf wheels-linux38.tar.gz wheels
+          docker run --rm \
+            -v "$PWD:/work" -w /work \
+            python:3.10 \
+            bash -c "apt-get update -qq && apt-get install -y build-essential curl && \
+                     python -m pip install -U pip wheel setuptools && \
+                     pip wheel -w wheels -r requirements.txt"
 
-      - uses: actions/upload-artifact@v4
+      # 2) 打包
+      - name: Tar wheels
+        run: tar -czf wheels-linux310.tar.gz wheels
+
+      # 3) 上传
+      - uses: actions/upload-artifact@v3
         with:
-          name: linux-wheels38
-          path: wheels-linux38.tar.gz
+          name: linux-wheels
+          path: wheels-linux310.tar.gz
