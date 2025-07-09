@@ -22,7 +22,7 @@ jobs:
         run: tar -czf wheels-linux310.tar.gz wheels
 
       # 3) 上传
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: linux-wheels
           path: wheels-linux310.tar.gz
