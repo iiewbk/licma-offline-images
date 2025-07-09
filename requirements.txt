@@ -2,8 +2,8 @@ bblfsh==4.2.0
 certifi==2025.7.9
 charset-normalizer==3.4.2
 docker==7.1.0
-grpcio==1.51.1
-grpcio-tools==1.51.1
+grpcio==1.48.2
+grpcio-tools==1.48.2
 idna==3.10
 protobuf==3.20.3
 requests==2.32.4
